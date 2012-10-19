@@ -18,6 +18,7 @@ namespace UnNamedProject
             public string Location;
             public List<string> Tags;
         }
+        private List<ImageData> Images = new List<ImageData>();
 
         public Form1()
         {
@@ -41,11 +42,25 @@ namespace UnNamedProject
                 Bitmap b = new Bitmap(ofd.FileName);
                 pictureBox1.Image = b;
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-
-
+                string[] empty = new string[3];
+                empty[0] = "test";
+                empty[1] = "lampcat";
+                empty[2] = "git";
+                LoadImage(ofd.FileName, ofd.SafeFileName, empty);
             }
         }
-
+        private void LoadImage(string FilePath, string FileName, string[] tags)
+        {
+            ImageData Idata = new ImageData();
+            Idata.id = 0;//Just for now
+            Idata.Location = FilePath;
+            Idata.Name = FileName;
+            foreach (string s in tags)
+            {
+                Idata.Tags.Add(s);
+            }
+            Images.Add(Idata);
+        }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
 

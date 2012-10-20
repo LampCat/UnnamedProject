@@ -41,16 +41,20 @@ namespace UnNamedProject
             ofd.Filter = "*.png|*.jpg";
             if (ofd.FileName != "")
             {
-                
-                Bitmap b = new Bitmap(ofd.FileName);
-                pictureBox1.Image = b;
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                SetDisplayImage(ofd.FileName);
                 string[] empty = new string[3];
                 empty[0] = "test";
                 empty[1] = "lampcat";
                 empty[2] = "git";
                 LoadImage(ofd.FileName, ofd.SafeFileName, empty);
             }
+        }
+        private void SetDisplayImage(string ImagePath)
+        {
+            Bitmap b = new Bitmap(ImagePath);
+            pictureBox1.Image = b;
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
         }
         private void LoadImage(string FilePath, string FileName, string[] tags)
         {
@@ -64,10 +68,7 @@ namespace UnNamedProject
                 Idata.Tags.Add(s);
             }
             Images.Add(Idata);
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(AddToList));
-            else
-            dataGridView1.Rows.Add(FileName, FilePath, tags[2]);//Fix
+            AddToRows(FileName, FilePath, tags.ToString());//Fix tags
         }
         private void AddToList()
         {
@@ -103,18 +104,41 @@ namespace UnNamedProject
 
         private void button1_Click(object sender, EventArgs e)
         {
+
             ImageData Idata = new ImageData();
             Idata = Search(textBox1.Text);
             if (Idata.id != 5000)
             {
-                if (this.InvokeRequired)
-                    this.Invoke(new MethodInvoker(AddToList));
-                else
-                    dataGridView1.Rows.Add(Idata.Name, Idata.Location, Idata.Tags);
+                AddToRows(Idata.Name, Idata.Location, Idata.Tags.ToString());//Fix tags
             }
             else
             {
                 MessageBox.Show("No Images found.");
+            }
+        }
+        private void AddToRows(string name, string path, string tags)
+        {
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(AddToList));
+            else
+                dataGridView1.Rows.Add(name, path, tags);
+        }
+
+        private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void dataGridView1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (Images[e.RowIndex].id != EmptyImg.id)
+            {
+                SetDisplayImage(Images[e.RowIndex].Location);
             }
         }
     }
